@@ -3,7 +3,7 @@ import Categories from "@/components/Categories";
 import Booksdata from "@/components/Booksdata";
 import Footer from "@/components/Footer";
 import Image from "next/image";
-import heroImage from "@/assets/hero_images.png";
+
 
 export default function Home() {
   return (
@@ -20,8 +20,10 @@ export default function Home() {
         </div>
 
         <Image
-          src={heroImage}
+          src="/assets/hero_images.png"
           alt="hero_image"
+          width={384}
+          height={384}
           className="w-96 h-auto"
         />
       </section>
