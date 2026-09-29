@@ -69,8 +69,16 @@ const Navbar = () => {
                         >
                             <li>My Account</li>
                         </Link>
-                    )}
 
+                    )}
+                    {isAuthenticated && user?.role === "customer" && (
+                        <Link
+                            href="/borrowings"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            <li>My Borrowings</li>
+                        </Link>
+                    )}
 
                 </ul>
 
@@ -129,7 +137,14 @@ const Navbar = () => {
                                 <li>My Account</li>
                             </Link>
                         )}
-
+                        {isAuthenticated && user?.role === "customer" && (
+                            <Link
+                                href="/borrowings"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <li>My Borrowings</li>
+                            </Link>
+                        )}
                         {isAuthenticated && (
                             <li
                                 onClick={handleLogout}
