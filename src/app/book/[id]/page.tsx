@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAppSelector } from "@/utils/hooks";
 import Booksdata from "@/components/Booksdata";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
 type Book = {
     id: string | number;
     title: string;
@@ -99,54 +99,78 @@ export default function BookDetail({
         alert("Book borrowed successfully!");
     };
     return (
-        <section className="p-5">
+        <section className="min-h-screen bg-gray-50 px-6 py-10">
 
-            <Link href="/browsebook">
-                <button className="px-3 py-1">
-                    <img
-                        src="/assets/left_icon.svg"
-                        alt="Back"
-                        className="w-7 h-7"
-                    />
-                </button>
-            </Link>
-
-            <div className="flex md:flex-row flex-col justify-center gap-10 p-5 mt-5">
-
-                <img
-                    src={bookData.img}
-                    alt="book_img"
-                    className="h-80 w-96 object-cover"
+            <Link
+                href="/browsebook"
+                className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black transition"
+            >
+                <Image
+                    src="/assets/left_icon.svg"
+                    alt="Back"
+                    width={20}
+                    height={20}
+                    className="w-5 h-5"
                 />
 
-                <div>
-                    <h2 className="font-semibold font-Poppins text-4xl mb-2">
-                        Title : {bookData.title}
-                    </h2>
+                <span>Back to books</span>
+            </Link>
 
-                    <p className="font-base font-Poppins text-xl mb-2">
-                        Description : {bookData.description}
-                    </p>
+            <div className="mt-8 bg-white border border-gray-200 rounded-2xl p-6 md:p-10">
+                <div className="grid md:grid-cols-2 gap-10 items-center">
+                    <div>      <Image
+                        src={bookData.img}
+                        alt={bookData.title}
+                        width={384}
+                        height={480}
+                        className="w-full h-[480px] object-cover rounded-lg"
+                    />
+                    </div>
+                    <div>
+                        <p className="text-sm uppercase tracking-[3px] text-gray-400 mb-3">
+                            Book Details
+                        </p>
 
-                    <h4 className="text-lg font-semibold font-Poppins mb-2">
-                        <span className="px-2 py-1 bg-black text-white font-medium text-base font-Poppins">
-                            Author
-                        </span>{" "}
-                        : {bookData.author}
-                    </h4>
+                        <h1 className="text-3xl md:text-4xl font-semibold leading-tight">
+                            {bookData.title}
+                        </h1>
 
-                    <p className="font-Poppins text-md font-medium mt-1 text-orange-500">
-                        Ratings {bookData.rating}+
-                    </p>
+                        <p className="text-gray-500 text-lg mt-3">
+                            by {bookData.author}
+                        </p>
 
-                    <button
-                        onClick={handleBorrow}
-                        className="mt-6 bg-black text-white px-6 py-3 hover:bg-gray-800"
-                    >
-                        Borrow Book
-                    </button>
+                        <div className="flex items-center gap-2 mt-5">
+                            <span className="text-lg">
+                                ★
+                            </span>
+
+                            <span className="font-medium">
+                                {bookData.rating}
+                            </span>
+
+                            <span className="text-gray-400">
+                                rating
+                            </span>
+                        </div>
+
+                        <div className="border-t border-gray-200 mt-7 pt-7">
+                            <h2 className="text-lg font-semibold mb-3">
+                                Description
+                            </h2>
+
+                            <p className="text-gray-600 leading-7">
+                                {bookData.description}
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={handleBorrow}
+                            className="mt-8 bg-black text-white px-7 py-3 rounded-md hover:bg-gray-800 transition"
+                        >
+                            Borrow Book
+                        </button>
+                    </div>
                 </div>
-
             </div>
 
             <Booksdata title="See other books" />
