@@ -20,9 +20,20 @@ export default function Login() {
 
         const savedUsers = localStorage.getItem("libraryUsers");
 
-        const users = savedUsers
-            ? [...defaultUsers, ...JSON.parse(savedUsers)]
-            : defaultUsers;
+        const savedUsersList = savedUsers
+            ? JSON.parse(savedUsers)
+            : [];
+
+        const users = [
+            ...defaultUsers.filter(
+                (defaultUser) =>
+                    !savedUsersList.some(
+                        (savedUser: { email: string }) =>
+                            savedUser.email === defaultUser.email
+                    )
+            ),
+            ...savedUsersList,
+        ];
 
         const user = users.find(
             (user) =>
