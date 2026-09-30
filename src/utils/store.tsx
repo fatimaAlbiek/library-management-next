@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import bookSlice from "./bookSlice";
 import authSlice from "./authSlice";
 import loanSlice from "./loanSlice";
+import categorySlice from "./categorySlice";
 
 const store = configureStore({
     reducer: {
         book: bookSlice,
         auth: authSlice,
         loan: loanSlice,
+        category: categorySlice,
     },
 });
 

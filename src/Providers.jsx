@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
-import { Provider, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import store from "./utils/store";
 import { setUser } from "./utils/authSlice";
+import { setCategories } from "./utils/categorySlice";
 
 function AuthLoader({ children }) {
     const dispatch = useDispatch();
+    const categories = useSelector((state) => state.category);
+    const [categoriesLoaded, setCategoriesLoaded] = useState(false);
 
     useEffect(() => {
         const savedUser = localStorage.getItem("libraryUser");
@@ -18,6 +21,22 @@ function AuthLoader({ children }) {
             dispatch(setUser(null));
         }
     }, [dispatch]);
+
+    useEffect(() => {
+        const savedCategories = localStorage.getItem("libraryCategories");
+
+        if (savedCategories) {
+            dispatch(setCategories(JSON.parse(savedCategories)));
+        }
+
+        setCategoriesLoaded(true);
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (categoriesLoaded) {
+            localStorage.setItem("libraryCategories", JSON.stringify(categories));
+        }
+    }, [categories, categoriesLoaded]);
 
     return children;
 }

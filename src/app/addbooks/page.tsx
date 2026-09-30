@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { addBook } from "@/utils/bookSlice";
 import { nanoid } from "nanoid";
+import type { RootState, AppDispatch } from "@/utils/store";
 
 const AddBooks = () => {
     const [error, setError] = useState("");
@@ -17,8 +18,12 @@ const AddBooks = () => {
         description: "",
     });
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
+
+    const categories = useSelector(
+        (state: RootState) => state.category
+    );
 
     const handleChange = (
         event: React.ChangeEvent<
@@ -27,7 +32,10 @@ const AddBooks = () => {
     ) => {
         const { name, value } = event.target;
 
-        if (event.target instanceof HTMLInputElement && event.target.files) {
+        if (
+            event.target instanceof HTMLInputElement &&
+            event.target.files
+        ) {
             setBookData({
                 ...bookData,
                 [name]: event.target.files[0],
@@ -40,15 +48,31 @@ const AddBooks = () => {
         }
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (
+        event: React.FormEvent<HTMLFormElement>
+    ) => {
         event.preventDefault();
 
-        const { title, author, image, description, type } = bookData;
+        const {
+            title,
+            author,
+            image,
+            description,
+            type,
+        } = bookData;
 
-        if (!title || !author || !type || !image || !description) {
+        if (
+            !title ||
+            !author ||
+            !type ||
+            !image ||
+            !description
+        ) {
             setError("Please ensure all the fields are entered");
             return;
         }
+
+        setError("");
 
         const newBook = {
             id: nanoid(),
@@ -100,7 +124,7 @@ const AddBooks = () => {
                     name="author"
                     value={bookData.author}
                     onChange={handleChange}
-                    placeholder="Enter a Author"
+                    placeholder="Enter an Author"
                     className="w-full h-12 pl-2 pr-5 border-2 border-black outline-none"
                 />
             </div>
@@ -117,12 +141,18 @@ const AddBooks = () => {
                     className="w-full h-12 px-2 border-2 border-black bg-white outline-none"
                     required
                 >
-                    <option value="">Select a category</option>
-                    <option value="Science">Science</option>
-                    <option value="fiction">Fiction</option>
-                    <option value="non_fiction">Non-fiction</option>
-                    <option value="fantacy">Fantasy</option>
-                    <option value="crime">Crime</option>
+                    <option value="">
+                        Select a category
+                    </option>
+
+                    {categories.map((category) => (
+                        <option
+                            key={category}
+                            value={category}
+                        >
+                            {category}
+                        </option>
+                    ))}
                 </select>
             </div>
 
@@ -136,14 +166,14 @@ const AddBooks = () => {
                     value={bookData.description}
                     onChange={handleChange}
                     placeholder="Enter a description"
-                    className="w-full h-12 pl-2 pr-5 border-2 border-black outline-none"
+                    className="w-full pl-2 pr-5 py-2 border-2 border-black outline-none"
                     rows={5}
                 />
             </div>
 
             <div className="mb-4 flex gap-4">
                 <label className="font-medium text-lg text-gray-600 mb-2">
-                    Upload a Image
+                    Upload an Image
                 </label>
 
                 <input
@@ -154,6 +184,7 @@ const AddBooks = () => {
                     className="outline-none"
                 />
             </div>
+
             {error && (
                 <p className="font-medium text-red-500 text-base mb-4">
                     {error}
@@ -171,3 +202,4 @@ const AddBooks = () => {
 };
 
 export default AddBooks;
+
