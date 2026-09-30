@@ -42,12 +42,6 @@ const Navbar = () => {
                         <li>Browse Book</li>
                     </Link>
 
-                    {isAuthenticated && (
-                        <Link href="/borrowed-books">
-                            <li>Borrowed Books</li>
-                        </Link>
-                    )}
-
                     {!isAuthenticated && (
                         <Link href="/login">
                             <li>Login</li>
@@ -74,8 +68,16 @@ const Navbar = () => {
                         >
                             <li>My Account</li>
                         </Link>
-                    )}
 
+                    )}
+                    {isAuthenticated && user?.role === "customer" && (
+                        <Link
+                            href="/borrowings"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            <li>My Borrowings</li>
+                        </Link>
+                    )}
 
                 </ul>
 
@@ -114,15 +116,6 @@ const Navbar = () => {
                             <li>Browse Book</li>
                         </Link>
 
-                        {isAuthenticated && (
-                            <Link
-                                href="/borrowed-books"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                <li>Borrowed Books</li>
-                            </Link>
-                        )}
-
                         {!isAuthenticated && (
                             <Link
                                 href="/login"
@@ -149,7 +142,14 @@ const Navbar = () => {
                                 <li>My Account</li>
                             </Link>
                         )}
-
+                        {isAuthenticated && user?.role === "customer" && (
+                            <Link
+                                href="/borrowings"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <li>My Borrowings</li>
+                            </Link>
+                        )}
                         {isAuthenticated && (
                             <li
                                 onClick={handleLogout}

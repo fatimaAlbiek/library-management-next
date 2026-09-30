@@ -1,51 +1,61 @@
 "use client";
-import { defaultUsers } from "@/utils/users";
+
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import { login } from "@/utils/authSlice";
 
-
-
-export default function Login() {
+export default function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
 
-    const dispatch = useDispatch();
     const router = useRouter();
+    const dispatch = useDispatch();
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setError("");
 
-        const savedUsers = localStorage.getItem("libraryUsers");
-
-        const users = savedUsers
-            ? [...defaultUsers, ...JSON.parse(savedUsers)]
-            : defaultUsers;
-
-        const user = users.find(
-            (user) =>
-                user.email === email &&
-                user.password === password
-        );
-        if (!user) {
-            setError("Invalid email or password");
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
             return;
         }
 
-        localStorage.setItem(
-            "libraryUser",
-            JSON.stringify(user)
+        const savedUsers = localStorage.getItem("libraryUsers");
+        const users = savedUsers ? JSON.parse(savedUsers) : [];
+
+        const existingUser = users.find(
+            (user: { email: string }) => user.email === email
         );
 
-        dispatch(login(user));
-
-        if (user.role === "admin") {
-            router.push("/admin");
-        } else {
-            router.push("/account");
+        if (existingUser) {
+            setError("Email is already registered");
+            return;
         }
+
+        const newUser = {
+            email,
+            password,
+            role: "customer" as const,
+        };
+
+        users.push(newUser);
+
+        localStorage.setItem(
+            "libraryUsers",
+            JSON.stringify(users)
+        );
+
+        localStorage.setItem(
+            "libraryUser",
+            JSON.stringify(newUser)
+        );
+
+        dispatch(login(newUser));
+
+        router.push("/account");
     };
 
     return (
@@ -55,7 +65,7 @@ export default function Login() {
                 className="w-full max-w-md bg-white p-8 shadow-md"
             >
                 <h1 className="text-3xl font-semibold text-center mb-6">
-                    Login
+                    Create Account
                 </h1>
 
                 <div className="mb-4">
@@ -68,6 +78,7 @@ export default function Login() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter your email"
+                        required
                         className="w-full border-2 border-gray-300 p-3 outline-none"
                     />
                 </div>
@@ -82,6 +93,24 @@ export default function Login() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
+                        required
+                        className="w-full border-2 border-gray-300 p-3 outline-none"
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label className="block mb-2 font-medium">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) =>
+                            setConfirmPassword(e.target.value)
+                        }
+                        placeholder="Confirm your password"
+                        required
                         className="w-full border-2 border-gray-300 p-3 outline-none"
                     />
                 </div>
@@ -96,16 +125,17 @@ export default function Login() {
                     type="submit"
                     className="w-full bg-black text-white py-3 hover:bg-gray-800"
                 >
-                    Login
+                    Register
                 </button>
 
-                <p className="text-center mt-4 text-gray-600">Don't have an account?{" "}
+                <p className="text-center mt-4 text-gray-600">
+                    Already have an account?{" "}
                     <button
                         type="button"
-                        onClick={() => router.push("/register")}
+                        onClick={() => router.push("/login")}
                         className="text-black font-medium hover:underline"
                     >
-                        Register
+                        Login
                     </button>
                 </p>
             </form>
