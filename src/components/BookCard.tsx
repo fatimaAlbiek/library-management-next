@@ -6,7 +6,8 @@ type Book = {
   author: string;
   description: string;
   img: string;
-  rating: number;
+  rating: number | string;
+  type: string;
   isNew?: boolean;
 };
 
